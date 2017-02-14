@@ -127,7 +127,7 @@ function eatDot10() {
   console.log('\nChomp!');
   score += 10;
   dotsRemaining -= 10;
-  levelChecker
+  levelChecker()
 }
 
 function eatDot100() {
@@ -138,14 +138,14 @@ function eatDot100() {
   console.log('\nChomp!');
   score += 100;
   dotsRemaining -= 100;
-  levelChecker
+  levelChecker()
   }
 }
 
 function eatDotAll() {
   console.log('\nChomp!');
   score = score + dotsRemaining;
-  levelChecker  ()
+  levelChecker()
 }
 
 function eatGhost(ghost) {
@@ -157,7 +157,7 @@ function eatGhost(ghost) {
   else {
     ghostCount ++
     console.log(" You just ate " + ghost.name + "!");
-    ghost.edible = 'Inedible'
+    ghost.edible = 'Inedible';
     scoreCounter()
     ghostReset()
   }
