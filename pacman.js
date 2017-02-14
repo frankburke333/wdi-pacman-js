@@ -3,6 +3,7 @@ var score = 0;
 var lives = 3;
 var powerPellets = 3;
 var ghostCount = 0
+var dotsRemaining = 240
 
 
 
@@ -13,7 +14,7 @@ var inky = {
   name: 'Inky',
   colour: 'Red',
   character: 'Shadow',
-  edible: false
+  edible: 'Inedible'
 };
 
 var blinky = {
@@ -21,7 +22,7 @@ var blinky = {
   name: 'Blinky',
   colour: 'Cyan',
   character: 'Speedy',
-  edible: false
+  edible: 'Inedible'
 };
 
 var pinky = {
@@ -29,7 +30,7 @@ var pinky = {
   name: 'Pinky',
   colour: 'Pink',
   character: 'Bashful',
-  edible: false
+  edible: 'Inedible'
 };
 
 var clyde = {
@@ -37,13 +38,13 @@ var clyde = {
   name: 'Clyde',
   colour: 'Orange',
   character: 'Shadow',
-  edible: false
+  edible: 'Inedible'
 };
 
 
 // replace this comment with your four ghosts setup as objects
 
-var ghosts = ["Inky", "Blinky", "Pinky", "Clyde"];
+var ghosts = [inky, "Blinky", "Pinky", "Clyde"];
 
 
 // Draw the screen functionality
@@ -63,11 +64,14 @@ function clearScreen() {
 function displayStats() {
   console.log('Score: ' + score + '     Lives: ' + lives);
   console.log('Power Pellets: ' + powerPellets  );
+  console.log('Dots Remaining: ' + dotsRemaining  );
 }
 
 function displayMenu() {
   console.log('\n\nSelect Option:\n');  // each \n creates a new line
-  console.log('(d) Eat Dot');
+  console.log('(d) Eat 10 Dots');
+  console.log('(e) Eat 100 Dots');
+  console.log('(f) Eat ALL Dots');
   if (powerPellets > 0){ console.log('(p) Eat Power Pellet');}
   console.log("(1) Eat " + inky.name + " Edible: " + inky.edible + '');
   console.log("(2) Eat " + blinky.name + " Edible: " + blinky.edible + '');
@@ -84,7 +88,7 @@ function displayPrompt() {
 function eatPowerPellet() {
   if (powerPellets > 0){
   console.log('\nPower Pellet! You guys are like SO DEAD');
-  inky.edible = true, blinky.edible = true, pinky.edible = true, clyde.edible = true;
+  inky.edible = 'Edible', blinky.edible = 'Edible', pinky.edible = 'Edible', clyde.edible = 'Edible';
   score += 50;
   powerPellets -= 1
   }
@@ -92,39 +96,61 @@ function eatPowerPellet() {
   console.log("\nNo Pellets left! RUN!");
 }
 
+function dotChecker() {
+  if (dotsRemaining === 0);{
+    dotsRemaining = 240;
+  }
+}
+
 // Menu Options
-function eatDot() {
+function eatDot10() {
   console.log('\nChomp!');
   score += 10;
+  dotsRemaining -= 10;
+}
+
+function eatDot100() {
+  if (dotsRemaining < 100){
+  console.log('\nOnly ' + dotsRemaining + ' remaning');
+  }
+  else {
+  console.log('\nChomp!');
+  score += 100;
+  dotsRemaining -= 100;
+  }
+}
+
+function eatDotAll() {
+  console.log('\nChomp!');
+  score = score + dotsRemaining;
+  dotChecker()
 }
 
 function eatGhost(ghost) {
-  points = 200
   if (ghost.edible === false) {
-  console.log("\nPacman got got by " + ghost +"!");
+  console.log("\nPacman got got by " + ghost.name +"!");
   lives -= 1;
-  checkLives()}
+  checkLives()
+  }
   else {
     ghostCount ++
-    console.log("You just ate " + ghost + "!");
+    console.log(" You just ate " + ghost.name + "!");
     ghost.edible = false
     scoreCounter()
+    ghostReset()
   }
 }
 
 function scoreCounter() {
-  if (ghostCount < 3) {
-    score = score + (ghostCount * 200)
-  }
-    else if (ghostCount === 3){
-      score = score + (ghostCount * 400)
-    }
-    else {
-      score = score + (ghostCount * 400)
-      ghostCount = 0
-    }
+  score = score + (Math.pow(2, ghostCount)*100);
 }
 
+function ghostReset() {
+  if (ghostCount === 4){
+    ghostCount = 0
+  }
+
+}
 function checkLives() {
   if (lives === 0) {
     process.exit()
@@ -141,7 +167,13 @@ function processInput(key) {
       process.exit();
       break;
     case 'd':
-      eatDot();
+      eatDot10();
+      break;
+    case 'e':
+      eatDot100();
+      break;
+    case 'f':
+      eatDotAll();
       break;
     case '1':
       eatGhost(inky);
