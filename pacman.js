@@ -1,10 +1,18 @@
 // Setup initial game stats
 var score = 0;
 var lives = 3;
-var powerPellets = 3;
+var powerPellets = 4;
 var ghostCount = 0
 var dotsRemaining = 240
-
+var level = 0
+var cherry = 1
+var strawberry = 1
+var orange = 1
+var apple = 1
+var pineapple = 1
+var galaxian = 1
+var bell = 1
+var key = 1
 
 
 // Define your ghosts here
@@ -65,18 +73,28 @@ function displayStats() {
   console.log('Score: ' + score + '     Lives: ' + lives);
   console.log('Power Pellets: ' + powerPellets  );
   console.log('Dots Remaining: ' + dotsRemaining  );
+  console.log('Level: ' + level  );
+
 }
 
 function displayMenu() {
   console.log('\n\nSelect Option:\n');  // each \n creates a new line
-  console.log('(d) Eat 10 Dots');
-  console.log('(e) Eat 100 Dots');
+  if (dotsRemaining >= 10) {console.log('(d) Eat 10 Dots');}
+  if (dotsRemaining >= 100) {console.log('(e) Eat 100 Dots');}
   console.log('(f) Eat ALL Dots');
   if (powerPellets > 0){ console.log('(p) Eat Power Pellet');}
-  console.log("(1) Eat " + inky.name + " Edible: " + inky.edible + '');
-  console.log("(2) Eat " + blinky.name + " Edible: " + blinky.edible + '');
-  console.log("(3) Eat " + pinky.name + " Edible: " + pinky.edible + '');
-  console.log("(4) Eat " + clyde.name + " Edible: " + clyde.edible + '');
+  if (level === 1 && cherry === 1){console.log('(c) CHERRY BONUS!');}
+  if (level === 2 && strawberry === 1){console.log('(s) STRAWBERRY BONUS!');}
+  if (level === 3 && orange === 1){console.log('(o) ORANGE BONUS!');}
+  if (level === 5 && apple  === 1){console.log('(a) APPLE BONUS!');}
+  if (level === 7 && pineapple === 1){console.log('(p) PINEAPPLE BONUS!');}
+  if (level === 9 && galaxian === 1){console.log('(s) GALAXIAN SPACESHIP BONUS!');}
+  if (level === 11 && bell === 1){console.log('(o) BELL BONUS!');}
+  if (level === 13 && key  === 1){console.log('(a) KEY BONUS!');}
+  console.log("(1) Eat " + inky.name + " Status: " + inky.edible + '');
+  console.log("(2) Eat " + blinky.name + " Status: " + blinky.edible + '');
+  console.log("(3) Eat " + pinky.name + " Status: " + pinky.edible + '');
+  console.log("(4) Eat " + clyde.name + " Status: " + clyde.edible + '');
   console.log('(q) Quit');
 }
 
@@ -96,9 +114,11 @@ function eatPowerPellet() {
   console.log("\nNo Pellets left! RUN!");
 }
 
-function dotChecker() {
-  if (dotsRemaining === 0);{
+function levelChecker() {
+  if (dotsRemaining === 0 && powerPellets === 0);{
     dotsRemaining = 240;
+    powerPellets = 4
+    level ++
   }
 }
 
@@ -107,6 +127,7 @@ function eatDot10() {
   console.log('\nChomp!');
   score += 10;
   dotsRemaining -= 10;
+  levelChecker
 }
 
 function eatDot100() {
@@ -117,13 +138,14 @@ function eatDot100() {
   console.log('\nChomp!');
   score += 100;
   dotsRemaining -= 100;
+  levelChecker
   }
 }
 
 function eatDotAll() {
   console.log('\nChomp!');
   score = score + dotsRemaining;
-  dotChecker()
+  levelChecker  ()
 }
 
 function eatGhost(ghost) {
@@ -135,7 +157,7 @@ function eatGhost(ghost) {
   else {
     ghostCount ++
     console.log(" You just ate " + ghost.name + "!");
-    ghost.edible = false
+    ghost.edible = 'Inedible'
     scoreCounter()
     ghostReset()
   }
@@ -143,6 +165,46 @@ function eatGhost(ghost) {
 
 function scoreCounter() {
   score = score + (Math.pow(2, ghostCount)*100);
+}
+
+function eatCherry() {
+  score += 100
+  cherry --
+}
+
+function eatStrawberry() {
+  score += 300
+  strawberry --
+}
+
+function eatOrange() {
+  score += 500
+  orange --
+}
+
+function eatApple() {
+  score += 700
+  apple --
+}
+
+function eatPineapple() {
+  score += 1000
+  pineapple --
+}
+
+function eatGalaxian() {
+  score += 2000
+  galaxian --
+}
+
+function eatBell() {
+  score += 3000
+  bell --
+}
+
+function eatKey() {
+  score += 5000
+  key --
 }
 
 function ghostReset() {
@@ -190,7 +252,30 @@ function processInput(key) {
     case 'p':
       eatPowerPellet();
       break;
-
+      case 'c':
+        eatCherry();
+        break;
+      case 's':
+        eatStrawberry();
+        break;
+      case 'o':
+        eatOrange();
+        break;
+      case 'a':
+        eatApple();
+      break;
+      case 'p':
+        eatPineapple();
+        break;
+      case 'g':
+        eatGalaxian();
+        break;
+      case 'b':
+        eatBell();
+        break;
+      case 'k':
+        eatKey();
+      break;
     default:
       console.log('\nInvalid Command!');
   }
